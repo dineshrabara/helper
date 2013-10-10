@@ -14,7 +14,7 @@ namespace Dinesh\Helper;
  */
 class DNS {
 
-    public static function ajax_fill_dropdown($change_dropdown, $replace_dropdown, $label, $url) {
+    public static function ajax_fill_dropdown($change_dropdown, $replace_dropdown, $url, $empty = array()) {
         $html = '<script type="text/javascript">';
 
         $html.='jQuery(document).ready(function($) {';
@@ -25,8 +25,12 @@ class DNS {
         $html.='dataType:"json",';
         $html.='data: jQuery(this).parents("form").find("input,select").not("[type=hidden][name^=_]").serialize(),';
         $html.='success:function(data){';
-        $html.='    jQuery("select[name=\'' . $replace_dropdown . '\']").empty();';
-        $html.='    jQuery("select[name=\'' . $replace_dropdown . '\']").append(\'<option value="">--select ' . $label . '--</option>\');';
+        $html.='    jQuery("select[name=\'' . $replace_dropdown . '\']").find("option:not(:first)").remove();';
+        if (!empty($empty)) {
+            foreach ($empty as $key => $emt) {
+                $html.='    jQuery("select[name=\'' . $emt . '\']").find("option:not(:first)").remove();';
+            }
+        }
         $html.='    jQuery.each(data, function(key,value){';
         $html.='        jQuery("select[name=\'' . $replace_dropdown . '\']").append(\'<option value="\'+key+\'">\'+value+\'</option>\');';
         $html.='});';
