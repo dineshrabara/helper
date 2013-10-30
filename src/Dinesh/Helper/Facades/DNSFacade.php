@@ -4,7 +4,7 @@ namespace Dinesh\Helper\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class DNS extends Facade {
+class DNSFacade extends Facade {
 
     /**
      * Get the registered name of the component.
