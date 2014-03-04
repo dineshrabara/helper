@@ -4,6 +4,7 @@ namespace Dinesh\Helper;
 
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\DB;
 
 /*
  * To change this template, choose Tools | Templates
@@ -208,6 +209,33 @@ class DNS {
         //Get the image from the output buffer
         $img_src = ob_get_clean();
         return base64_encode($img_src);
+    }
+
+    public static function interpolateQuery($query, $params) {
+        $keys = array();
+
+        # build a regular expression for each parameter
+        foreach ($params as $key => $value) {
+            if (is_string($key)) {
+                $keys[] = '/:' . $key . '/';
+            } else {
+                $keys[] = '/[?]/';
+            }
+        }
+
+        $query = preg_replace($keys, $params, $query, 1, $count);
+
+        #trigger_error('replaced '.$count.' keys');
+
+        return $query;
+    }
+
+    public static function getQueryLog() {
+        $return = array();
+        foreach (DB::getQueryLog() as $key => $query) {
+            $return[] = static::interpolateQuery($query['query'], $query['bindings']);
+        }
+        return $return;
     }
 
 }

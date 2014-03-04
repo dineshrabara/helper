@@ -23,3 +23,4 @@
         }
     }
     
+    use DNS::getQueryLog()  to get query with parameter 
