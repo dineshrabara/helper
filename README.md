@@ -30,26 +30,26 @@
 
 ```php    
 
-                ->with('math_captcha', DNS::create_mathas_captcha());
+->with('math_captcha', DNS::create_mathas_captcha());
 
 
-                <div class="control-group {{ $errors->has('captcha') ? 'error' : ''}}">
-                    <h3 style="padding-left: 25px;">
-                        <span>
-                            {{$math_captcha['first_digit']}}
-                            {{$math_captcha['operand']}}
-                            {{$math_captcha['second_digit']}}
-                            = 
-                        </span>
-                        {{ Form::text('captcha', null,array('class'=>'span1','style'=>'display: inline-block;margin-top: 11px;'))}}
-                        (?)
-                    </h3>
-                    {{ $errors->first('captcha', '<span class="help-inline">:message</span>') }}
-                    <!--<p style="padding: 0;margin: 0;color: red;font-size: 13px;font-weight: bolder;">ઉપર ના સરવાળા કે બાદબાકી નું પરિણામ અહિં લખો</p>-->
-                </div>
+<div class="control-group {{ $errors->has('captcha') ? 'error' : ''}}">
+    <h3 style="padding-left: 25px;">
+        <span>
+            {{$math_captcha['first_digit']}}
+            {{$math_captcha['operand']}}
+            {{$math_captcha['second_digit']}}
+            = 
+        </span>
+        {{ Form::text('captcha', null,array('class'=>'span1','style'=>'display: inline-block;margin-top: 11px;'))}}
+        (?)
+    </h3>
+    {{ $errors->first('captcha', '<span class="help-inline">:message</span>') }}
+    <!--<p style="padding: 0;margin: 0;color: red;font-size: 13px;font-weight: bolder;">ઉપર ના સરવાળા કે બાદબાકી નું પરિણામ અહિં લખો</p>-->
+</div>
 
-                
-                Validator::extend('check_captcha', function($attribute, $value, $parameters)
-                {
-                    return DNS::check_captcha($value);
-                });
+
+Validator::extend('check_captcha', function($attribute, $value, $parameters)
+{
+    return DNS::check_captcha($value);
+});
