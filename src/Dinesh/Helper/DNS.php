@@ -5,11 +5,7 @@ namespace Dinesh\Helper;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+use Illuminate\Support\Facades\Session;
 
 /**
  * Description of DNS1D
@@ -17,7 +13,14 @@ use Illuminate\Support\Facades\DB;
  * @author dinesh
  */
 class DNS {
-
+    /**
+     * 
+     * @param type $change_dropdown
+     * @param type $replace_dropdown
+     * @param type $url
+     * @param type $empty
+     * @return string
+     */
     public static function ajax_fill_dropdown($change_dropdown, $replace_dropdown, $url, $empty = array()) {
         $html = '<script type="text/javascript">';
 
@@ -45,7 +48,11 @@ class DNS {
         $html.='</script>';
         return $html;
     }
-
+    /**
+     * 
+     * @param type $field
+     * @return string
+     */
     public static function dataSorter($field) {
         $url = Request::url();
         $sort_html = '';
@@ -56,7 +63,14 @@ class DNS {
         $sort_html.='</map>';
         return $sort_html;
     }
-
+    /**
+     * 
+     * @param type $type
+     * @param type $base64
+     * @param type $alt
+     * @param array $attributes
+     * @return type
+     */
     public static function imgBase64($type, $base64, $alt = null, $attributes = array()) {
         $attributes['alt'] = $alt;
         $attrib = '';
@@ -66,7 +80,14 @@ class DNS {
             }
         return '<img src="' . $type . ';base64,' . $base64 . '"' . $attrib . '>';
     }
-
+    /**
+     * 
+     * @param type $code
+     * @param type $density
+     * @param type $top_txt
+     * @param type $is_bottom_code
+     * @return type
+     */
     public static function code128BarCode($code, $density = 1, $top_txt = "PRODUCT", $is_bottom_code = TRUE) {
         $CODE128A_START_BASE = 103;
         $CODE128B_START_BASE = 104;
@@ -211,6 +232,12 @@ class DNS {
         return base64_encode($img_src);
     }
 
+    /**
+     * 
+     * @param type $query
+     * @param type $params
+     * @return type
+     */
     public static function interpolateQuery($query, $params) {
         $keys = array();
 
@@ -230,12 +257,58 @@ class DNS {
         return $query;
     }
 
+    /**
+     * 
+     * @return type
+     */
     public static function getQueryLog() {
         $return = array();
         foreach (DB::getQueryLog() as $key => $query) {
             $return[] = static::interpolateQuery($query['query'], $query['bindings']);
         }
         return $return;
+    }
+
+    /**
+     * 
+     * @param type $captcha_name
+     * @return type
+     */
+    public static function create_mathas_captcha($captcha_name = 'math_captcha') {
+
+        $math_captcha = array("first_digit" => rand(1, 9), "second_digit" => rand(1, 9));
+        $operand = array("+");
+        $math_captcha['operand'] = $operand[rand(0, count($operand) - 1)];
+        switch ($math_captcha['operand']) {
+            case '-':
+                $math_captcha['answer'] = $math_captcha['first_digit'] - $math_captcha['second_digit'];
+                break;
+            case '+':
+                $math_captcha['answer'] = $math_captcha['first_digit'] + $math_captcha['second_digit'];
+                break;
+            case 'X':
+                $math_captcha['answer'] = $math_captcha['first_digit'] * $math_captcha['second_digit'];
+                break;
+        }
+        Session::forget($captcha_name);
+        Session::put($captcha_name, $math_captcha);
+
+        return $math_captcha;
+    }
+
+    /**
+     * 
+     * @param type $value
+     * @param type $captcha_name
+     * @return boolean
+     */
+    public static function check_captcha($value, $captcha_name = "math_captcha") {
+        if (Session::has($captcha_name)) {
+            if (Session::get($captcha_name, false)['answer'] == $value) {
+                return TRUE;
+            }
+        }
+        return FALSE;
     }
 
 }
