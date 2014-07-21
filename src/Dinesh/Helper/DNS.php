@@ -246,7 +246,7 @@ class DNS {
             if (is_string($key)) {
                 $keys[] = '/:' . $key . '/';
             } else {
-                $keys[] = '/[?]/';
+                $keys[] = '/:' . $key . '/';
             }
         }
 
