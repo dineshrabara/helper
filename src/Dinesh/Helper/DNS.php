@@ -310,5 +310,9 @@ class DNS {
         }
         return FALSE;
     }
+    
+    function dateFormate($date, $format = 'd-m-Y') {
+        return \Carbon\Carbon::createFromFormat($format, $date);
+    }
 
 }
