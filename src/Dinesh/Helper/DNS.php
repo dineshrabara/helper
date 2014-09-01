@@ -314,5 +314,16 @@ class DNS {
     public static function dateFormate($date, $format = 'd-m-Y') {
         return \Carbon\Carbon::createFromFormat($format, $date);
     }
-
+    public static function getUniqueFilename($fileInput, $destination) {
+        $filename = $fileInput->getClientOriginalName();
+        $i = 0;
+        $path_parts = pathinfo($filename);
+        $path_parts['filename'] = \Str::slug($path_parts['filename'], '-');
+        $filename = $path_parts['filename'];
+        while (\File::exists($destination . '/' . $filename . '.' . $path_parts['extension'])) {
+            $filename = $path_parts['filename'] . '-' . $i;
+            $i++;
+        }
+        return $filename . '.' . $path_parts['extension'];
+    }
 }
