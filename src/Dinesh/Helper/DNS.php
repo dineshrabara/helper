@@ -55,7 +55,7 @@ class DNS {
      */
     public static function dataSorter($field,$except = array()) {
         if (empty($except)) {
-            $except = Input::except(array('page', 'sort_order.' . $field));
+            $except = Input::except(array('page', 'sort_order'));
         }
         $url = Request::url();
         $sort_html = '';
@@ -67,13 +67,13 @@ class DNS {
         return $sort_html;
     }
     /**
-     * 
+     * dataSorterMultiple
      * @param type $field
      * @return string
      */
-    public static function dataSorterSingle($field,$except = array()) {
+    public static function dataSorterMultiple($field,$except = array()) {
         if (empty($except)) {
-            $except = Input::except(array('page', 'sort_order'));
+            $except = Input::except(array('page', 'sort_order.' . $field));
         }
         $url = Request::url();
         $sort_html = '';
