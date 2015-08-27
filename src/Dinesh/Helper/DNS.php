@@ -4,6 +4,7 @@ namespace Dinesh\Helper;
 
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\HTML;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -65,6 +66,29 @@ class DNS {
         $sort_html.='<area shape="rect" coords="8,0,13,20" href="' . $url . '?' . http_build_query($except + array("sort_order[$field]" => "asc")) . '" title="ASC">';
         $sort_html.='</map>';
         return $sort_html;
+    }
+    /**
+     * 
+     * @param type $field
+     * @return string
+     */
+    public static function dataSorterSingle($field, $default = null, $except = array()) {
+        if (empty($except)) {
+            $except = Input::except(array('page', 'sort_order'));
+        }
+        $url = Request::url();
+        if (Input::get("sort_order.$field") == 'asc') {
+            $sort_html = HTML::link($url . '?' . http_build_query($except + array("sort_order[$field]" => "desc")), '<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true"></span>', array('title' => 'DESC', 'class' => 'dns_sort_desc dns_sort'));
+        } elseif (Input::get("sort_order.$field") == 'desc') {
+            $sort_html = HTML::link($url . '?' . http_build_query($except + array("sort_order[$field]" => "asc")), '<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"></span>', array('title' => 'ASC', 'class' => 'dns_sort_asc dns_sort'));
+        } elseif ($default == 'asc') {
+            $sort_html = HTML::link($url . '?' . http_build_query($except + array("sort_order[$field]" => "desc")), '<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true"></span>', array('title' => 'DESC', 'class' => 'dns_sort_desc dns_sort'));
+        } elseif ($default == 'desc') {
+            $sort_html = HTML::link($url . '?' . http_build_query($except + array("sort_order[$field]" => "asc")), '<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"></span>', array('title' => 'ASC', 'class' => 'dns_sort_asc dns_sort'));
+        } else {
+            $sort_html = HTML::link($url . '?' . http_build_query($except + array("sort_order[$field]" => "asc")), '<span class="glyphicon glyphicon-sort" aria-hidden="true"></span>', array('title' => 'ASC', 'class' => 'dns_sort_none dns_sort'));
+        }
+        return HTML::decode($sort_html);
     }
     /**
      * dataSorterMultiple
